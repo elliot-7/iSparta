@@ -2,20 +2,20 @@ import fs from 'fs-extra'
 import path from 'path'
 import action from './action'
 import apngCompress from './apngCompress'
-import TYPE 		from '../../store/enum/type'
+import TYPE from '../../store/enum/type'
 
 export default function (item, store, locale) {
   store.dispatch('editProcess', {
     index: item.index,
-    text: locale.outputing+' WEBP...',
+    text: locale.outputing + ' WEBP...',
     schedule: 0.8
   })
 
   var tmpDir = item.basic.tmpDir
-  	return action.exec(action.bin('apngdis'), [
+  return action.exec(action.bin('apngdis'), [
     item.basic.fileList[0]
   ], item, store, locale).then(() => {
-    var data = fs.readFileSync(path.join(tmpDir, 'apngframe_metadata.json'), {encoding: 'utf-8'})
+    var data = fs.readFileSync(path.join(tmpDir, 'apngframe_metadata.json'), { encoding: 'utf-8' })
     var animation = JSON.parse(data)
     var frames = animation['frames']
     var promises = frames.map(function (frame) {
@@ -23,7 +23,7 @@ export default function (item, store, locale) {
       var webp_frame_file = path.join(tmpDir, frame['src'] + '.webp')
       return action.exec(action.bin('cwebp'), [
         //item.basic.type == TYPE.PNGs ? '-q 100' : '-q ' + item.options.quality.value,
-        item.options.quality.checked ? '-q ' + item.options.quality.value : '' ,
+        item.options.quality.checked ? '-q ' + item.options.quality.value : '',
         png_frame_file,
         '-o ' + webp_frame_file
       ], item, store, locale).then(() => {

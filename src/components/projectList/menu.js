@@ -17,7 +17,7 @@ class rightMenu {
       menu.append(new MenuItem({
         label: locale.openOriginal,
         click () {
-          var srcPath = option.inputPath.replace(/\/[^\/]*$/, '')
+          var srcPath = option.inputPath.replace(/\/[^/]*$/, '')
           shell.showItemInFolder(srcPath)
         }
       }))

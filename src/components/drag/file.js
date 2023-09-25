@@ -5,7 +5,7 @@ const _ = require('lodash')
 // 正则匹配
 const reg = {
   'PNGs': /.*\.png$/i,
-    // 'WEBP': /.*\.webp$/i,
+  // 'WEBP': /.*\.webp$/i,
   'GIF': /.*\.gif$/i,
   'MP4': /.*\.mp4$/i
 }
@@ -22,12 +22,18 @@ var items = []
 
 // 获取所有的文件夹
 class actionFiles {
-  getAllFiles (root) {
-        // 拉取文件夹
+  getAllFiles(root) {
+    // 拉取文件夹
     if (root.split(deep)[1].split('/').length < maxDeep) {
       let stats = fs.lstatSync(root)
       if (stats.isDirectory()) {
         var files = fs.readdirSync(root)
+
+        files = files.sort(function (a, b) {
+          return a.localeCompare(b, 'zh-CN', { numeric: true })
+
+        })
+
         files.forEach((file) => {
           var res = [],
             pathname = root + '/' + file,
@@ -40,7 +46,7 @@ class actionFiles {
           }
         })
       }
-            // 拉取图片
+      // 拉取图片
       if (stats.isFile()) {
         this.getImageFormat(root)
       }
@@ -48,7 +54,7 @@ class actionFiles {
       alert('最深支持5层~')
     }
   }
-  getImageFormat (files) {
+  getImageFormat(files) {
     var isApng
     let tempPng = []
     let pathname = path.dirname(files)
@@ -69,14 +75,14 @@ class actionFiles {
     }
   }
 
-  writeBasic (format, address, fileList) {
+  writeBasic(format, address, fileList) {
 
     let temp = {}
     let globalSetting = JSON.parse(window.storage.getItem('globalSetting'))
     temp.basic = {}
     temp.options = globalSetting.options
     //去除文件名空格
-    temp.options.outputName = path.basename(fileList[0]).split('.')[0].replace(/[ ]/g,"") + '_'+globalSetting.options.outputSuffix
+    temp.options.outputName = path.basename(fileList[0]).split('.')[0].replace(/[ ]/g, "") + '_' + globalSetting.options.outputSuffix
     temp.basic.type = format
     temp.basic.inputPath = address + '/' + path.basename(fileList[0]).split('.')[0]
     temp.basic.outputPath = address
@@ -84,7 +90,7 @@ class actionFiles {
     items.push(temp)
   }
 
-  writePngBasic (PNGs) {
+  writePngBasic(PNGs) {
     // console.warn(PNGs)
     let tempPrefix = {}
     for (var i = 0; i < PNGs.length; i++) {
@@ -98,12 +104,12 @@ class actionFiles {
       } else {
         tempPrefix[prefix].push(PNGs[i])
       }
-      if (i == PNGs.length - 1) {}
+      //if (i == PNGs.length - 1) {}
     }
 
-    for (var i in tempPrefix) {
-      if (tempPrefix[i].length > 1) {
-        this.writeBasic('PNGs', path.dirname(tempPrefix[i][0]), tempPrefix[i])
+    for (var j in tempPrefix) {
+      if (tempPrefix[j].length > 1) {
+        this.writeBasic('PNGs', path.dirname(tempPrefix[j][0]), tempPrefix[j])
       }
     }
   }
@@ -112,20 +118,20 @@ class actionFiles {
 // 文件处理
 export const f = {
 
-  readerFiles (dir) {
+  readerFiles(dir) {
     return new Promise(function (resolve, reject) {
-            //
+      //
       items = [], recordPng = []
 
       let operateFiles = new actionFiles()
 
       for (var i = 0; i < dir.length; i++) {
         if (dir[i].path) {
-                    // 拖拽文件夹
+          // 拖拽文件夹
           deep = dir[i].path
           operateFiles.getAllFiles(dir[i].path)
         } else {
-                    // 选择文件夹
+          // 选择文件夹
           deep = dir[i]
           operateFiles.getAllFiles(dir[i])
         }
@@ -135,7 +141,7 @@ export const f = {
       resolve(items)
     })
   },
-  basicFIle () {
+  basicFIle() {
 
   }
 

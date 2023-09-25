@@ -7,14 +7,14 @@ import PNGs2apng from './pngs2apng'
 export default function (item, store) {
   store.dispatch('editProcess', {
     index: item.index,
-    text: locale.analysing+'...',
+    text: locale.analysing + '...',
     schedule: 0.4
   })
 
   var tmpDir = item.basic.tmpDir
   var webpDir = path.join(item.basic.tmpDir, 'webp')
 
-  var webpDir = path.join(tmpDir, 'webp')
+   webpDir = path.join(tmpDir, 'webp')
   var tmpFile = path.join(item.basic.tmpOutputDir, item.options.outputName + '.webp')
   fs.ensureDirSync(tmpDir)
   fs.ensureDirSync(webpDir)
@@ -44,18 +44,18 @@ export default function (item, store) {
         })
       })
 
-			// action.exec(action.bin('dwebp'),[
-			// ]
+      // action.exec(action.bin('dwebp'),[
+      // ]
     })
   })
 }
-function getframe (item, frame, callback) {
+function getframe(item, frame, callback) {
   var webpDir = path.join(item.basic.tmpDir, 'webp')
   fs.ensureDirSync(webpDir)
   var isStop = false
-	// webpmux get wrong size image, so this feature not support yet.
+  // webpmux get wrong size image, so this feature not support yet.
   action.exec(action.bin('webpmux'), [
-  		'-get frame ' + frame,
+    '-get frame ' + frame,
     item.basic.fileList[0],
     '-o ' + path.join(webpDir, frame + '.webp')
   ], item, store, locale).then(() => {

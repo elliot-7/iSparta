@@ -1,9 +1,9 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain,dialog } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, dialog } from 'electron'
+import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import {
-  createProtocol,
-  installVueDevtools
+  createProtocol
 } from 'vue-cli-plugin-electron-builder/lib'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const path = require("path");
@@ -13,31 +13,34 @@ const path = require("path");
 let win
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }])
+protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
 
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     minWidth: 820,
     minHeight: 800,
     width: 820,
-    height: 800, 
-    icon:path.join(__static,"icons/icon.icns"),
-    title:"iSparta",
+    height: 800,
+    icon: path.join(__static, "icons/icon.icns"),
+    title: "iSparta",
     show: false,
     webPreferences: {
       nodeIntegration: true,
-      webSecurity: false
-    } })
-  
+      contextIsolation: false,
+      webSecurity: false,
+      enableRemoteModule: true
+    }
+  })
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
-    
+
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
@@ -71,8 +74,10 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+ 
+   await installExtension(VUEJS_DEVTOOLS)
 
-  
+
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     // Devtools extensions are broken in Electron 6.0.0 and greater
@@ -116,7 +121,7 @@ ipcMain.on('change-item-fold', function (event, path, order) {
 })
 // 监听输出到目录的操作
 ipcMain.on('change-multiItem-fold', function (event, path) {
-  
+
   dialog.showOpenDialog({
     defaultPath: path,
     properties: ['openDirectory']

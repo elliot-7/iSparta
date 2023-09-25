@@ -12,6 +12,7 @@
       <i class="el-icon-upload"></i>
       <div class="el-upload__text">{{ $t("uploadTips") }}</div>
       <div class="el-upload__tip" slot="tip">{{ $t("uploadRule") }}</div>
+    
     </el-upload>
     </div>
   </section>
@@ -20,7 +21,7 @@
 
 import { f as fsOperate } from '../drag/file.js'
 import * as d from '../drag/drag.js'
-
+import path from 'path'
 const {dialog} = require('electron').remote
 
 export default {
@@ -56,7 +57,7 @@ export default {
         })
       })
       return false
-    }
+    },
   },
   mounted () {
   }

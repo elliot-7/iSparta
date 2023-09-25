@@ -40,9 +40,9 @@ export default class Action {
     // console.log(process.env)
     
     if (process.env.NODE_ENV == 'development') {
-      var bin = path.join(process.cwd(), '/public/bin/', pf, exec)
+      var bin = path.join(process.cwd(), '/Users/qi/isp/public/bin/', pf, exec)
     } else {
-      var bin = path.join(basePath, '/bin/', pf, exec)
+       bin = path.join(basePath, '/bin/', pf, exec)
     }
     Process.exec("chmod -R +x " +bin);
     if (pf == 'win32' || pf == 'win64') {
