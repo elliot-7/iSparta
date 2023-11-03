@@ -4,9 +4,21 @@ module.exports = defineConfig({
   transpileDependencies: true,
   pluginOptions:{
     electronBuilder:{
+      customFileProtocol: "./",
       nodeIntegration:true,
       builderOptions: {
-        asar:false
+        asar:false,
+        mac: {
+          "target": [
+            {
+              "target": "dmg",
+              "arch": [
+                "x64"
+              ]
+            }
+          ],
+          icon: "./public/icons/icon.icns"
+        }
       }
     }
   },
